@@ -1,6 +1,24 @@
 import os
 from config import MAX
 
+schema_get_file_content = {
+    "type": "function",
+    "function": {
+        "name": "get_file_content",
+        "description": "Reads content at the location provided by the user",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "File path to read the content from",
+                },
+            },
+            "required": ["file_path"]
+        },
+    },
+}
+
 def get_file_content(working_directory: str, file_path: str) -> str:
     try:
         wd_path = os.path.abspath(working_directory)

@@ -1,6 +1,31 @@
 import os
 import subprocess
 
+schema_run_python_file = {
+    "type": "function",
+    "function": {
+        "name": "run_python_file",
+        "description": "Executes the python script found at the provided parameter file_path with any args optionally provided by the user",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "file_path": {
+                    "type": "string",
+                    "description": "File path to execute python file from, relative to the working directory (default is the working_directory itself)",
+                },
+                "args": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "list of arguments provided by the user to be given to the executed python file at the file path",
+                },
+            },
+            "required": ["file_path"]
+        },
+    },
+}
+
 def run_python_file(working_directory: str, file_path: str, args: list[str] | None = None) -> str:
     try:
         wd_path = os.path.abspath(working_directory)
@@ -24,6 +49,6 @@ def run_python_file(working_directory: str, file_path: str, args: list[str] | No
             else:
                 output_string.append(f"STDOUT: {comp_process.stdout}")
                 output_string.append(f"STDERR: {comp_process.stderr}")
-            return output_string
+            return " ".join(output_string)
     except Exception as e:
         return f"Error: executing Python file: {e}"

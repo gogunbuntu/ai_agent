@@ -2,26 +2,27 @@
 
 from collections.abc import Callable
 
-
 class Calculator:
     def __init__(self) -> None:
         self.operators: dict[str, Callable[[float, float], float]] = {
-            "+": lambda a, b: a + b,
-            "-": lambda a, b: a - b,
-            "*": lambda a, b: a * b,
-            "/": lambda a, b: a / b,
+            '+': lambda a, b: a + b,
+            '-': lambda a, b: a - b,
+            '*': lambda a, b: a * b,
+            '/': lambda a, b: a / b,
         }
+        # Corrected operator precedence (higher numbers = higher precedence)
         self.precedence: dict[str, int] = {
-            "+": 1,
-            "-": 1,
-            "*": 2,
-            "/": 2,
+            '+': 1,  # Lower precedence than *
+            '-': 1,
+            '*': 2,
+            '/': 2,
         }
 
     def evaluate(self, expression: str) -> float | None:
         if not expression or expression.isspace():
             return None
         tokens = expression.strip().split()
+        print(f'Neural tokens: {tokens}')  # Debug
         return self._evaluate_infix(tokens)
 
     def _evaluate_infix(self, tokens: list[str]) -> float:
@@ -30,10 +31,11 @@ class Calculator:
 
         for token in tokens:
             if token in self.operators:
-                while (
-                    operators
-                    and operators[-1] in self.operators
-                    and self.precedence[operators[-1]] >= self.precedence[token]
+                # Process operators with equal or higher precedence first
+                while (   
+                    operators   
+                    and operators[-1] in self.operators   
+                    and self.precedence[operators[-1]] >= self.precedence[token]  
                 ):
                     self._apply_operator(operators, values)
                 operators.append(token)
